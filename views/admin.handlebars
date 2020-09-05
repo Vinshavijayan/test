@@ -1,0 +1,21 @@
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mt-4">Admin Login</h1>
+            <p>{{msg}}</p>
+            <form method="POST" action="/admin/login">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="username" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block text-center">Log in</button>
+            </form>
+        </div>
+    </div>
+</div>
