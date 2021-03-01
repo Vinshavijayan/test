@@ -1,4 +1,73 @@
 <h1>Profile</h1>
 <br>
-<a href="/logout">Logout</a>
 
+
+<input class="form-control mb-5 mt-5" type="text" placeholder="search for company" 
+ id="myInput" onkeyup="SearchUser()">
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center mt-3">Company</h1>
+           
+            <table class="table" id="myTable">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Details</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each users}}
+                    <tr>
+                        <th scope="row">{{this.name}}</th>
+                        <td>{{this.email}}</td>
+                       
+                        <td>
+                            <form method="POST" action="/details">
+                                <input type="hidden" name="email" value="{{this.email}}">
+                                <button type="submit" class="btn btn-info">Details</button>
+                            </form>
+                        </td>
+                         <td>
+                            <form method="POST" action="profile">
+                                <input type="hidden" name="email" value="{{this.email}}">
+                                <button type="submit" class="btn btn-info">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br>
+
+
+ <form method="GET" action="/logout">
+      <button type="submit" class="btn btn-primary">Logout</button>
+        </form>
+<br>
+<script>
+function SearchUser() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>

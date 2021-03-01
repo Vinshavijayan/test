@@ -1,7 +1,7 @@
 <h1>Company details</h1>
 {{#each user}}
 
-<form action="/admin/editsave" method="POST">
+<form action="/user/details" method="POST">
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="name" name="name" value="{{this.name}}">
@@ -56,8 +56,6 @@
         <label for="debt">Debt</label>
         <input type="text" class="form-control" id="debt" name="debt" value="{{this.debt}}">
     </div>
-    {{!-- <input type="submit" value=""> --}}
 
-    <button type="submit">Edit</button>
 </form>
 {{/each}}

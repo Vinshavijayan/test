@@ -32,8 +32,16 @@ router.get("/register", redirecttoProfile,(req, res) => {
 })
 
 router.get("/profile", protectProfile, (req, res) => {
-    res.render("profile")
+    Users.find({}).lean().exec((err, data) => {
+        res.render("profile",{users :data})
+    })
+    
 })
+
+router.get("/details", protectProfile, (req, res) => {
+    res.render("details")
+})
+
 
 router.get("/logout", (req, res) => {
     res.clearCookie("sid");
@@ -46,11 +54,31 @@ router.post("/register", (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
+    const marketcap = req.body.marketcap;
+    const cmps = req.body.cmps;
+    const stock = req.body.stock;
+    const dy = req.body.dy;
+    const roce = req.body.roce;
+    const roe = req.body.roe;
+    const de = req.body.de;
+    const eps = req.body.eps;
+    const reserves = req.body.reserves;
+    const debt = req.body.debt;
 
     var data = {
         name: name,
         email: email,
-        password: password
+        password: password,
+        marketcap: marketcap,
+        cmps: cmps,
+        stock: stock,
+        dy: dy,
+        roce: roce,
+        roe: roe,
+        de: de,
+        eps: eps,
+        reserves: reserves,
+        debt: debt
     }
 
     Users.findOne({ email:email} , (err,docs)=> {
@@ -66,6 +94,26 @@ router.post("/register", (req, res) => {
    
 })
 
+
+router.post("/details", (req, res) => {
+    const email = req.body.email;
+    Users.find({ email: email }).lean().exec((err, data) => {
+        res.render("details", {
+            user: data
+        })
+    })
+})
+
+router.post("/delete", (req, res) => {
+    const email = req.body.email;
+    Users.findOneAndDelete({ email: email }, (err, doc) => {
+        if (err) throw err;
+        res.redirect("/user/profile")
+    });
+})
+
+
+
 router.post("/login", (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -74,7 +122,17 @@ router.post("/login", (req, res) => {
         if(err) throw err;
         if(data){
             req.session.userEmail = email;
-            res.redirect("/profile");
+
+            Users.find({}).lean().exec((err, data) => {
+                if (err) throw err;
+                // res.render("profile", {
+                //     users: data
+                // })
+                res.redirect('/profile');
+            })
+            
+
+           
         }else{
             
             res.render("login", {msg:"wrong password" });

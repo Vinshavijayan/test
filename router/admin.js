@@ -3,9 +3,9 @@ const router = express.Router();
 const Users = require("../models/user.model");
 
 const protectAdmin = (req, res, next) => {
-    if(!req.session.username){
+    if (!req.session.username) {
         res.redirect("/admin/login")
-    }else{
+    } else {
         next();
     }
 }
@@ -16,64 +16,85 @@ const password = "admin"
 
 
 
-router.get("/login",(req,res) => {
-    if(!req.session.username){
+router.get("/login", (req, res) => {
+    if (!req.session.username) {
         res.render("admin")
-    }else{
+    } else {
         res.redirect("/admin/dashboard")
     }
-}) 
-router.post("/login",(req, res) => {
-    if(username === req.body.username && password === req.body.password) {
+})
+router.post("/login", (req, res) => {
+    if (username === req.body.username && password === req.body.password) {
         req.session.username = username;
         res.redirect("/admin/dashboard")
-    }else{
-res.render("admin" , {msg: "wrong password"})
+    } else {
+        res.render("admin", { msg: "wrong password" })
     }
 })
 
-router.get("/dashboard", (req,res) => {
-    if(req.session.username){
+router.get("/dashboard", (req, res) => {
+    if (req.session.username) {
         Users.find({}).lean().exec((err, data) => {
-            if(err) throw err;
+            if (err) throw err;
             res.render("dashboard", {
                 users: data
             })
         })
-    }else{
+    } else {
         res.redirect("/admin")
     }
-  
+
 })
 
 
-router.get("/delete",(req,res) => {
+router.get("/delete", (req, res) => {
     res.render("delete")
-}) 
+})
 
 
 router.post("/edit", (req, res) => {
     const email = req.body.email;
-    Users.find({email: email}).lean().exec((err, data) => {
+    Users.find({ email: email }).lean().exec((err, data) => {
         res.render("edit", {
             user: data
         })
     })
 })
 
-router.post("/editsave",(req, res) => {
+router.post("/editsave", (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
+    const marketcap = req.body.marketcap;
+    const cmps = req.body.cmps;
+    const stock = req.body.stock;
+    const dy = req.body.dy;
+    const roce = req.body.roce;
+    const roe = req.body.roe;
+    const de = req.body.de;
+    const eps = req.body.eps;
+    const reserves = req.body.reserves;
+    const debt = req.body.debt;
+
 
     const data = {
         name,
         email,
-        password
+        password,
+        marketcap,
+        cmps,
+        stock,
+        dy,
+        roce,
+        roe,
+        de,
+        eps,
+        reserves,
+        debt
     }
 
-    Users.findOneAndUpdate({ email: email}, data, (err, doc) => {
-        if(err) throw err;
+    Users.findOneAndUpdate({ email: email }, data, (err, doc) => {
+        if (err) throw err;
         res.redirect("/admin/dashboard");
     });
 })
@@ -81,8 +102,8 @@ router.post("/editsave",(req, res) => {
 
 router.post("/delete", (req, res) => {
     const email = req.body.email;
-    Users.findOneAndDelete({email: email}, (err, doc) => {
-        if(err) throw err;
+    Users.findOneAndDelete({ email: email }, (err, doc) => {
+        if (err) throw err;
         res.redirect("/admin/dashboard")
     });
 })
